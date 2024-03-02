@@ -1,0 +1,9 @@
+{
+  "name": "react-devtools-standalone",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "repository": "git@github.com:leegeunhyeok/react-devtools-standalone.git",
+  "author": "leegeunhyeok <dev.ghlee@gmail.com>",
+  "license": "MIT"
+}
