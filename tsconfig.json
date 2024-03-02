@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "rootDir": "."
+  },
+  "include": ["src", "build.ts"],
+  "exclude": ["dist"]
+}
+

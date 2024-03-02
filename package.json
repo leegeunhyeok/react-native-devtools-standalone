@@ -5,5 +5,14 @@
   "main": "index.js",
   "repository": "git@github.com:leegeunhyeok/react-devtools-standalone.git",
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "node -r @swc-node/register build.ts"
+  },
+  "devDependencies": {
+    "@swc-node/register": "^1.8.0",
+    "@swc/core": "^1.4.2",
+    "esbuild": "^0.20.1",
+    "typescript": "^5.3.3"
+  }
 }
