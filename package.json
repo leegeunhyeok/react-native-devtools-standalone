@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "main": "index.js",
-  "repository": "git@github.com:leegeunhyeok/react-native-devtools.git",
+  "repository": "git@github.com:leegeunhyeok/react-native-devtools-standalone.git",
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "prepack": "yarn build",
     "start": "yarn build:demo && node -r @swc-node/register demo/server.ts",
     "build": "node -r @swc-node/register build.ts",
     "build:demo": "node -r @swc-node/register build-demo.ts"
@@ -14,12 +15,12 @@
   "exports": {
     "./frontend": {
       "import": "./esm/frontend/index.mjs",
-      "require": "./dist/frontend/index.cjs",
+      "require": "./cjs/frontend/index.cjs",
       "default": "./dist/frontend/index.js"
     },
     "./backend": {
       "import": "./esm/backend/index.mjs",
-      "require": "./dist/backend/index.cjs",
+      "require": "./cjs/backend/index.cjs",
       "default": "./dist/backend/index.js"
     }
   },
