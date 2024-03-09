@@ -1,4 +1,4 @@
-import { connectToServer } from '../src/frontend';
+import { connectToProxyServer } from '../src/frontend';
 
 window.onload = () => {
   const targetElement = document.getElementById('container');
@@ -8,7 +8,7 @@ window.onload = () => {
     return;
   }
 
-  connectToServer({
+  connectToProxyServer({
     element: targetElement,
     onConnect: () => { console.log('onConnect'); },
     onDisconnect: () => { console.log('onDisconnect'); },

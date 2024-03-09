@@ -12,7 +12,7 @@ import { DEFAULT_PROXY_WSS_PORT } from '../shared';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- payload
 type Data = any;
 
-interface ConnectToServerOptions {
+interface ConnectToProxyServer {
   element: HTMLElement;
   host?: string;
   port?: number;
@@ -29,7 +29,7 @@ interface ConnectToServerOptions {
 
 const noop = (): void => undefined;
 
-export const connectToServer = (options: ConnectToServerOptions): void => {
+export const connectToProxyServer = (options: ConnectToProxyServer): void => {
   const {
     element,
     host = 'localhost',
