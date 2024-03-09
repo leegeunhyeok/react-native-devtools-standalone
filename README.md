@@ -2,6 +2,22 @@
 
 Standalone [react-devtools](https://github.com/facebook/react/tree/main/packages/react-devtools) APIs for React Native.
 
+## Architecture
+
+```
+┌────────────────────┐         ┌─────────────────────┐
+│ Dev Server         │         │ React Native        │
+│┌──────────────────┐│         │                     │
+││ (Proxy)          ││    ┌────► react-devtools-core │
+││ WebSocket Server ◄─────┘    └─────────────────────┘
+││        ▲         ││
+││        │         ││         ┌─────────────────────────┐
+││        ▼         ││         │ React Devtools Frontend │
+││ SocketIO Server ◄──────┐    │                         │
+│└──────────────────┘│    └────► SocketIO Client         │
+└────────────────────┘         └─────────────────────────┘
+```
+
 ## Installation
 
 ```bash
