@@ -1,8 +1,6 @@
 {
   "name": "react-native-devtools-standalone",
-  "version": "0.0.0",
-  "private": true,
-  "main": "index.js",
+  "version": "0.1.0",
   "repository": "git@github.com:leegeunhyeok/react-native-devtools-standalone.git",
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "license": "MIT",
