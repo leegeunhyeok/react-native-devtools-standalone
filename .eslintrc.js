@@ -27,7 +27,7 @@ module.exports = {
       },
     },
     {
-      files: ['demo/**/*.ts'],
+      files: ['build*.ts', 'demo/**/*.ts'],
       rules: {
         'no-console': 'off',
         'import/no-named-as-default-member': 'off',
