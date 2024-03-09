@@ -1,18 +1,51 @@
 {
-  "name": "react-devtools-standalone",
+  "name": "react-native-devtools-standalone",
   "version": "0.0.0",
   "private": true,
   "main": "index.js",
-  "repository": "git@github.com:leegeunhyeok/react-devtools-standalone.git",
+  "repository": "git@github.com:leegeunhyeok/react-native-devtools.git",
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "node -r @swc-node/register build.ts"
+    "start": "yarn build:demo && node -r @swc-node/register demo/server.ts",
+    "build": "node -r @swc-node/register build.ts",
+    "build:demo": "node -r @swc-node/register build-demo.ts"
+  },
+  "exports": {
+    "./frontend": {
+      "import": "./esm/frontend/index.mjs",
+      "require": "./dist/frontend/index.cjs",
+      "default": "./dist/frontend/index.js"
+    },
+    "./backend": {
+      "import": "./esm/backend/index.mjs",
+      "require": "./dist/backend/index.cjs",
+      "default": "./dist/backend/index.js"
+    }
   },
   "devDependencies": {
     "@swc-node/register": "^1.8.0",
     "@swc/core": "^1.4.2",
+    "@types/express": "^4.17.21",
+    "@types/react": "^18.2.61",
+    "@types/react-devtools-inline": "^4.24.8",
+    "@types/react-dom": "^18.2.19",
+    "@types/ws": "^8.5.10",
+    "@vercel/style-guide": "^6.0.0",
     "esbuild": "^0.20.1",
+    "eslint": "^8.57.0",
+    "express": "^4.18.3",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3"
-  }
+  },
+  "dependencies": {
+    "react": "0.0.0-experimental-be229c565-20220613",
+    "react-devtools-inline": "^5.0.0",
+    "react-dom": "0.0.0-experimental-be229c565-20220613",
+    "react-is": "^18.2.0",
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4",
+    "ws": "^8.16.0"
+  },
+  "prettier": "@vercel/style-guide/prettier"
 }

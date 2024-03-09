@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
-    "rootDir": "."
+    "rootDir": ".",
+    "target": "es2020",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "esModuleInterop": true,
+    "strictNullChecks": true
   },
-  "include": ["src", "build.ts"],
+  "include": ["src", "demo", "build.ts", "build-demo.ts"],
   "exclude": ["dist"]
 }
-
