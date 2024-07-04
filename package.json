@@ -6,8 +6,9 @@
   "author": "leegeunhyeok <dev.ghlee@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "prepack": "yarn build",
+    "prepack": "yarn cleanup && yarn build",
     "start": "yarn build:demo && node -r @swc-node/register demo/server.ts",
+    "cleanup": "rm -rf dist && rm -rf cjs && rm -rf esm",
     "build": "node -r @swc-node/register build.ts && tsc -p tsconfig.build.json",
     "build:demo": "node -r @swc-node/register build-demo.ts"
   },
