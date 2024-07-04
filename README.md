@@ -1,6 +1,12 @@
+<div align="center">
+
 # react-native-devtools-standalone
 
-Standalone [react-devtools](https://github.com/facebook/react/tree/main/packages/react-devtools) APIs for React Native.
+![preview](./preview.png)
+
+Standalone [react-devtools](https://github.com/facebook/react/tree/main/packages/react-devtools) for integration with React Native
+
+</div>
 
 ## Architecture
 
