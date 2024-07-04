@@ -1,4 +1,4 @@
-import { connectToProxyServer } from '../src/frontend';
+import { setupDevTools } from '../src/frontend';
 
 function assert(value: unknown, message: string): asserts value {
   if (!value) throw new Error(message);
@@ -15,7 +15,7 @@ window.onload = () => {
     loadingElement.style.display = show ? 'block' : 'none';
   };
 
-  connectToProxyServer({
+  setupDevTools({
     element: targetElement,
     delegate: {
       onConnect: (target) => {

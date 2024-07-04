@@ -17,7 +17,7 @@ import {
 type Data = any;
 type Target = 'client' | 'proxy-server';
 
-interface ConnectToProxyServer {
+interface DevToolsConfigs {
   /**
    * Element to render DevTools.
    */
@@ -55,7 +55,7 @@ interface ProxyWebSocketDelegate {
 
 const noop = (): void => undefined;
 
-export const connectToProxyServer = (options: ConnectToProxyServer): void => {
+export const setupDevTools = (config: DevToolsConfigs): void => {
   const {
     element,
     host = 'localhost',
@@ -65,7 +65,7 @@ export const connectToProxyServer = (options: ConnectToProxyServer): void => {
       hideViewSourceAction: true,
     },
     delegate,
-  } = options;
+  } = config;
 
   let root: Root | null = null;
   let devToolsEventListener: Wall['listen'] | null = null;

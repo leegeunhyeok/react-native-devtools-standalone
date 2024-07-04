@@ -38,21 +38,108 @@ yarn add react-native-devtools-standalone
 
 ```ts
 import * as http from 'node:http';
-import { setupDevtoolsProxy } from 'react-native-devtools-standalone/backend';
+import { setupDevToolsProxy } from 'react-native-devtools-standalone/backend';
 
 const server = http.createServer();
 
-setupDevtoolsProxy({ server });
+const config: DevToolsProxyConfig = /* */;
+
+setupDevToolsProxy(config);
 
 server.listen(...);
+```
+
+```ts
+interface DevToolsProxyConfig {
+  /**
+   * Configurations for client(React Native).
+   */
+  client?: {
+    /**
+     * Dev server host.
+     *
+     * Defaults to `'localhost'`
+     */
+    host?: string;
+    /**
+     * `__REACT_DEVTOOLS_PORT__` value in React Native runtime.
+     *
+     * @see https://github.com/facebook/react-native/blob/v0.73.5/packages/react-native/Libraries/Core/setUpReactDevTools.js#L50-L53
+     *
+     * Defaults to `8097`
+     */
+    port?: number;
+    /**
+     * WebSocket delegate
+     */
+    delegate?: ProxyWebSocketDelegate;
+  };
+  /**
+   * Configurations for React DevTools.
+   */
+  devtools?: {
+    /**
+     * Dev server host.
+     *
+     * Defaults to `'localhost'`
+     */
+    host?: string;
+    /**
+     * Port for DevTools to connect.
+     *
+     * Defaults to `8098`
+     */
+    port?: number;
+    /**
+     * WebSocket delegate
+     */
+    delegate?: ProxyWebSocketDelegate;
+  };
+}
 ```
 
 ### Frontend
 
 ```ts
-import { connectToProxyServer } from 'react-native-devtools-standalone/frontend';
+import { setupDevTools } from 'react-native-devtools-standalone/frontend';
 
-connectToProxyServer({ element: document.getElementById('container') });
+const config: DevToolsConfigs = {
+  element: document.getElementById('container'),
+  /* */
+};
+
+setupDevTools(config);
+```
+
+```ts
+interface DevToolsConfigs {
+  /**
+   * Element to render DevTools.
+   */
+  element: HTMLElement;
+  /**
+   * Proxy web socket server host.
+   *
+   * Defaults to `'localhost'`
+   */
+  host?: string;
+  /**
+   * Proxy web socket server port.
+   *
+   * Defaults to `8098`
+   */
+  port?: number;
+  /**
+   * React DevTools props.
+   *
+   * Defaults to `{ showTabBar: true, hideViewSourceAction: true }`
+   */
+  devtoolsProps?: DevtoolsProps;
+  /**
+   * WebSocket delegate.
+   */
+  delegate?: ProxyWebSocketDelegate;
+}
 ```
 
 ## Development

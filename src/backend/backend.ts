@@ -5,7 +5,7 @@ interface DevToolsProxyConfig {
   /**
    * Configurations for client(React Native).
    */
-  client: {
+  client?: {
     /**
      * Dev server host.
      *
@@ -28,7 +28,7 @@ interface DevToolsProxyConfig {
   /**
    * Configurations for React DevTools.
    */
-  devtools: {
+  devtools?: {
     /**
      * Dev server host.
      *
@@ -51,7 +51,7 @@ interface DevToolsProxyConfig {
 export const setupDevToolsProxy = (
   config: DevToolsProxyConfig,
 ): (() => Promise<void>) => {
-  const { client, devtools } = config;
+  const { client = {}, devtools = {} } = config;
 
   const clientWebSocket = new ProxyWebSocket({
     host: client.host ?? DEFAULT_HOST,
