@@ -18,10 +18,35 @@ type Data = any;
 type Target = 'client' | 'proxy-server';
 
 interface ConnectToProxyServer {
+  /**
+   * Element to render DevTools.
+   */
   element: HTMLElement;
+  /**
+   * Proxy web socket server host.
+   *
+   * Defaults to `'localhost'`
+   */
   host?: string;
+  /**
+   * Proxy web socket server port.
+   *
+   * Defaults to `8098`
+   */
   port?: number;
+  /**
+   * React DevTools props.
+   *
+   * Defaults to `{ showTabBar: true, hideViewSourceAction: true }`
+   */
   devtoolsProps?: DevtoolsProps;
+  /**
+   * WebSocket delegate.
+   */
+  delegate?: ProxyWebSocketDelegate;
+}
+
+interface ProxyWebSocketDelegate {
   onConnect?: (target: Target) => void;
   onClose?: (target: Target) => void;
   onMessage?: (data: Data) => void;
@@ -39,10 +64,7 @@ export const connectToProxyServer = (options: ConnectToProxyServer): void => {
       showTabBar: true,
       hideViewSourceAction: true,
     },
-    onConnect,
-    onClose,
-    onMessage,
-    onSend,
+    delegate,
   } = options;
 
   let root: Root | null = null;
@@ -59,7 +81,7 @@ export const connectToProxyServer = (options: ConnectToProxyServer): void => {
 
       const data = { event, payload };
       socket.send(JSON.stringify(data));
-      onSend?.(data);
+      delegate?.onSend?.(data);
     },
   };
 
@@ -86,7 +108,7 @@ export const connectToProxyServer = (options: ConnectToProxyServer): void => {
 
   socket.addEventListener('open', () => {
     setup();
-    onConnect?.('proxy-server');
+    delegate?.onConnect?.('proxy-server');
   });
 
   socket.addEventListener('message', ({ data: rawData }) => {
@@ -94,24 +116,25 @@ export const connectToProxyServer = (options: ConnectToProxyServer): void => {
 
     switch (event.type) {
       case ProxyEventType.OPEN:
-        onConnect?.('client');
+        delegate?.onConnect?.('client');
         break;
 
       case ProxyEventType.DISCONNECTED:
-        onClose?.('client');
+        delegate?.onClose?.('client');
         break;
 
       case ProxyEventType.MESSAGE: {
         const parsedData = JSON.parse(event.payload);
         devToolsEventListener?.(parsedData);
-        onMessage?.(parsedData);
         break;
       }
     }
+
+    delegate?.onMessage?.(rawData);
   });
 
   socket.addEventListener('close', () => {
     cleanup();
-    onClose?.('proxy-server');
+    delegate?.onClose?.('proxy-server');
   });
 };

@@ -17,25 +17,27 @@ window.onload = () => {
 
   connectToProxyServer({
     element: targetElement,
-    onConnect: (target) => {
-      console.log('onConnect', target);
+    delegate: {
+      onConnect: (target) => {
+        console.log('onConnect', target);
 
-      if (target === 'client') {
-        showLoadingView(false);
-      }
-    },
-    onClose: (target) => {
-      console.log('onClose', target);
+        if (target === 'client') {
+          showLoadingView(false);
+        }
+      },
+      onClose: (target) => {
+        console.log('onClose', target);
 
-      if (target === 'client') {
-        window.location.reload();
-      }
-    },
-    onMessage: (data) => {
-      console.log('onMessage', data);
-    },
-    onSend: (data) => {
-      console.log('onSend', data);
+        if (target === 'client') {
+          window.location.reload();
+        }
+      },
+      onMessage: (data) => {
+        console.log('onMessage', data);
+      },
+      onSend: (data) => {
+        console.log('onSend', data);
+      },
     },
   });
 };
