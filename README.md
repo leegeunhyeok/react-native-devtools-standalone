@@ -9,12 +9,12 @@ Standalone [react-devtools](https://github.com/facebook/react/tree/main/packages
 │ Dev Server         │         │ React Native        │
 │┌──────────────────┐│         │                     │
 ││ (Proxy)          ││    ┌────► react-devtools-core │
-││ WebSocket Server ◄─────┘    └─────────────────────┘
-││        ▲         ││
+││ WebSocket Server ◄─────┘    │ (WebSocket)         │
+││        ▲         ││         └─────────────────────┘
 ││        │         ││         ┌─────────────────────────┐
 ││        ▼         ││         │ React Devtools Frontend │
-││ SocketIO Server ◄──────┐    │                         │
-│└──────────────────┘│    └────► SocketIO Client         │
+││ WebSocket Server ◄─────┐    │                         │
+│└──────────────────┘│    └────► WebSocket Client        │
 └────────────────────┘         └─────────────────────────┘
 ```
 

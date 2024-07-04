@@ -7,6 +7,13 @@ interface ProxyWebSocketOptions {
   delegate?: ProxyWebSocketDelegate;
 }
 
+interface BindOptions {
+  /**
+   * Send message without wrap with `ProxyEvent`
+   */
+  sendRawData?: boolean;
+}
+
 export interface ProxyWebSocketDelegate {
   onConnect?: (socket: ws.WebSocket) => void;
   onClose?: () => void;
@@ -17,6 +24,7 @@ export interface ProxyWebSocketDelegate {
 export class ProxyWebSocket {
   private wss: ws.WebSocketServer;
   private proxyWss?: ProxyWebSocket;
+  private proxyBindOptions?: BindOptions;
   private delegate?: ProxyWebSocketDelegate;
 
   constructor({ host, port, delegate }: ProxyWebSocketOptions) {
@@ -59,18 +67,28 @@ export class ProxyWebSocket {
       data instanceof ArrayBuffer
         ? Buffer.from(data).toString()
         : data.toString();
-    const event = this.createProxyEvent(
-      ProxyEventType.MESSAGE,
-      stringifiedData,
-    );
 
-    this.proxyWss?.sendProxyEvent(event);
+    if (this.proxyBindOptions?.sendRawData === true) {
+      this.proxyWss?.send(stringifiedData);
+    } else {
+      const event = this.createProxyEvent(
+        ProxyEventType.MESSAGE,
+        stringifiedData,
+      );
+
+      this.proxyWss?.sendProxyEvent(event);
+    }
+
     this.delegate?.onMessage?.(stringifiedData);
   }
 
   public sendProxyEvent(event: ProxyEvent): void {
+    this.send(JSON.stringify(event));
+  }
+
+  public send(data: string): void {
     this.wss.clients.forEach((client) => {
-      client.send(JSON.stringify(event));
+      client.send(data);
     });
   }
 
@@ -88,11 +106,12 @@ export class ProxyWebSocket {
     });
   }
 
-  public bind(proxyWebSocket: ProxyWebSocket): void {
+  public bind(proxyWebSocket: ProxyWebSocket, bindOptions?: BindOptions): void {
     if (this.proxyWss) {
       throw new Error('already another proxy websocket server bound');
     }
 
+    this.proxyBindOptions = bindOptions;
     this.proxyWss = proxyWebSocket;
   }
 
