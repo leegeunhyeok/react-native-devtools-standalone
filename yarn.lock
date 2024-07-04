@@ -2613,7 +2613,7 @@ lodash.merge@^4.6.2:
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
-loose-envify@^1.1.0, loose-envify@^1.4.0:
+loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -3017,21 +3017,20 @@ raw-body@2.5.2:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-react-devtools-inline@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/react-devtools-inline/-/react-devtools-inline-5.0.0.tgz#8cafeb788324ac33f52730a82b54c0fac9768ed2"
-  integrity sha512-zrbsL0UfCw+gp+RDD3wcEfOQME+/YNgmZn42kxAVujfyCgVIuCHbAwx0W6AWYPYekUBqsuRSeVs5FJAVoFEjPQ==
+react-devtools-inline@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/react-devtools-inline/-/react-devtools-inline-5.3.1.tgz#91aba25796804cc0993320f93805ed291ced0ee7"
+  integrity sha512-f5DJJg4p+3SvUQt/Yw5KiZinOBOGwF1yumWla875lO5qch1m/IFNkZqRRcmboPQKp2L4aqtVd/hyyEJVu642Xw==
   dependencies:
     source-map-js "^0.6.2"
     sourcemap-codec "^1.4.8"
 
-react-dom@0.0.0-experimental-be229c565-20220613:
-  version "0.0.0-experimental-be229c565-20220613"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-0.0.0-experimental-be229c565-20220613.tgz#dfa8b2848c874717a272924d789fc541f3e4dba0"
-  integrity sha512-TaFYP3sc7ji+/cviX1xYiYk213Yq3He/Ac//nSzWFZs1TnBrr/0MgyKZWt1MtBlM43dITuDLZDBs5gXMt0S2sQ==
+react-dom@^0.0.0-experimental-3da26163a3-20240704:
+  version "0.0.0-experimental-3da26163a3-20240704"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-0.0.0-experimental-3da26163a3-20240704.tgz#97ca11571fd997cfa2c58f7906573b6761e54d49"
+  integrity sha512-XB/5SdFml7icfC6uOv+OGLjZx1mBm8qI2prkIUR5qG4yq6yyt9AlqhxYhRpxLLtiW+bOC7WRVNTnAXv9JJaR4w==
   dependencies:
-    loose-envify "^1.1.0"
-    scheduler "0.0.0-experimental-be229c565-20220613"
+    scheduler "0.0.0-experimental-3da26163a3-20240704"
 
 react-is@^16.13.1:
   version "16.13.1"
@@ -3043,12 +3042,10 @@ react-is@^18.2.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react@0.0.0-experimental-be229c565-20220613:
-  version "0.0.0-experimental-be229c565-20220613"
-  resolved "https://registry.yarnpkg.com/react/-/react-0.0.0-experimental-be229c565-20220613.tgz#e71d052f4f39112518f126807e902289f198d08d"
-  integrity sha512-7ZIiFydwR9gDTC5zLB17/XtY9mB5U4NxTxAjtlD6fBlsikLWDPNYVC7HrkSDN0q6/Yeeeu7c7gfEXA++NsYtzw==
-  dependencies:
-    loose-envify "^1.1.0"
+react@^0.0.0-experimental-3da26163a3-20240704:
+  version "0.0.0-experimental-3da26163a3-20240704"
+  resolved "https://registry.yarnpkg.com/react/-/react-0.0.0-experimental-3da26163a3-20240704.tgz#d87a1072e6dbfb02dcff04c87a5aacd6a4fb0799"
+  integrity sha512-b9Sw4KyLGWNA9s56EPoSQ85KxJyZolZBJfZakJM4HEiMcZWyrVxDLq2A6ePmuAXhmaFhPPLdAyERtwhHfV83sQ==
 
 read-pkg-up@^7.0.1:
   version "7.0.1"
@@ -3193,12 +3190,10 @@ safe-regex-test@^1.0.3:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
-scheduler@0.0.0-experimental-be229c565-20220613:
-  version "0.0.0-experimental-be229c565-20220613"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.0.0-experimental-be229c565-20220613.tgz#d30074f414f051324ca0fca9a5d84ab5a4fd8a48"
-  integrity sha512-2tZdSQDB5d99sK5yGUBONUhbocurNfHjQqDjxfSEknz2oVEYakw7zwC4juUR0P1QT5MrMCltvgtD00avmM5Wxg==
-  dependencies:
-    loose-envify "^1.1.0"
+scheduler@0.0.0-experimental-3da26163a3-20240704:
+  version "0.0.0-experimental-3da26163a3-20240704"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.0.0-experimental-3da26163a3-20240704.tgz#cba1de269f70800bb9d9169c2123834ff61f7ae7"
+  integrity sha512-CGuOwMiAAfzQIljgJMM9ercAruHDFIvtOj/AaWZ4+9pP2NC9UIbEz2xKxh+zqBNuC7zj+6Q8THFSFbj6KejUOA==
 
 "semver@2 || 3 || 4 || 5":
   version "5.7.2"

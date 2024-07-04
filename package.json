@@ -39,9 +39,9 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "react": "0.0.0-experimental-be229c565-20220613",
-    "react-devtools-inline": "^5.0.0",
-    "react-dom": "0.0.0-experimental-be229c565-20220613",
+    "react": "^0.0.0-experimental-3da26163a3-20240704",
+    "react-devtools-inline": "^5.3.1",
+    "react-dom": "^0.0.0-experimental-3da26163a3-20240704",
     "react-is": "^18.2.0",
     "ws": "^8.16.0"
   },
