@@ -23,6 +23,11 @@
       "default": "./dist/backend/index.js"
     }
   },
+  "files": [
+    "./esm/*",
+    "./cjs/*",
+    "./dist/*"
+  ],
   "devDependencies": {
     "@swc-node/register": "^1.8.0",
     "@swc/core": "^1.4.2",
