@@ -5,26 +5,27 @@ import {
   createStore,
   initialize as createDevTools,
   type DevtoolsProps,
+  type Wall,
 } from 'react-devtools-inline/frontend';
-import { io } from 'socket.io-client';
-import { DEFAULT_PROXY_WSS_PORT } from '../shared';
+import {
+  DEFAULT_PROXY_WSS_PORT,
+  ProxyEventType,
+  type ProxyEvent,
+} from '../shared';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- payload
 type Data = any;
+type Target = 'client' | 'proxy-server';
 
 interface ConnectToProxyServer {
   element: HTMLElement;
   host?: string;
   port?: number;
   devtoolsProps?: DevtoolsProps;
-  onConnect?: () => void;
-  onDisconnect?: () => void;
-  onSetup?: () => void;
+  onConnect?: (target: Target) => void;
+  onClose?: (target: Target) => void;
   onMessage?: (data: Data) => void;
-  onSend?: (data: {
-    event: string;
-    payload: Data;
-  }) => void;
+  onSend?: (data: { event: string; payload: Data }) => void;
 }
 
 const noop = (): void => undefined;
@@ -39,63 +40,78 @@ export const connectToProxyServer = (options: ConnectToProxyServer): void => {
       hideViewSourceAction: true,
     },
     onConnect,
-    onDisconnect,
-    onSetup,
+    onClose,
     onMessage,
     onSend,
   } = options;
 
   let root: Root | null = null;
-  let innerHTML: string;
+  let devToolsEventListener: Wall['listen'] | null = null;
 
-  const socket = io(`http://${host}:${port}`);
-  
-  socket.on('connect', () => { onConnect?.(); });
+  const socket = new WebSocket(`ws://${host}:${port}`);
+  const wall: Wall = {
+    listen(listener) {
+      devToolsEventListener = listener;
+      return noop;
+    },
+    send(event, payload) {
+      if (socket.readyState !== WebSocket.OPEN) return;
 
-  socket.on('setup', () => {
+      const data = { event, payload };
+      socket.send(JSON.stringify(data));
+      onSend?.(data);
+    },
+  };
+
+  function setup(): void {
     if (root) {
       return;
     }
 
-    const bridge = createBridge(window, {
-      listen(listener) {
-        socket.on('message', (data) => {
-          listener(data);
-
-          onMessage?.(data);
-        });
-
-        return noop;
-      },
-      send(event, payload) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- allow
-        const data = { event, payload };
-        socket.emit('message', data);
-
-        onSend?.(data);
-      },
-    });
-
+    const bridge = createBridge(window, wall);
     const store = createStore(bridge, {
       supportsNativeInspection: true,
     });
-
     const DevTools = createDevTools(window, { bridge, store });
-
-    innerHTML = element.innerHTML;
 
     root = createRoot(element);
     root.render(createElement(DevTools, devtoolsProps));
+  }
 
-    onSetup?.();
-  });
-
-  socket.on('disconnect', () => {
+  function cleanup(): void {
     root?.unmount();
     root = null;
+    devToolsEventListener = null;
+  }
 
-    element.innerHTML = innerHTML;
-
-    onDisconnect?.();
+  socket.addEventListener('open', () => {
+    setup();
+    onConnect?.('proxy-server');
   });
-}
+
+  socket.addEventListener('message', ({ data: rawData }) => {
+    const event = JSON.parse(rawData) as ProxyEvent;
+
+    switch (event.type) {
+      case ProxyEventType.OPEN:
+        onConnect?.('client');
+        break;
+
+      case ProxyEventType.DISCONNECTED:
+        onClose?.('client');
+        break;
+
+      case ProxyEventType.MESSAGE: {
+        const parsedData = JSON.parse(event.payload);
+        devToolsEventListener?.(parsedData);
+        onMessage?.(parsedData);
+        break;
+      }
+    }
+  });
+
+  socket.addEventListener('close', () => {
+    cleanup();
+    onClose?.('proxy-server');
+  });
+};

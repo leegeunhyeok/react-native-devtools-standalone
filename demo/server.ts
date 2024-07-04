@@ -1,6 +1,6 @@
 import * as http from 'node:http';
 import express from 'express';
-import { setupDevtoolsProxy } from '../src/backend';
+import { setupDevToolsProxy } from '../src/backend';
 
 const app = express();
 
@@ -8,19 +8,41 @@ app.use(express.static(__dirname));
 
 const server = http.createServer(app);
 
-setupDevtoolsProxy({
-  server,
+setupDevToolsProxy({
   client: {
-    onConnect: () => { console.log('onConnect'); },
-    onClose: () => { console.log('onClose'); },
-    onListen: () => { console.log('onListen'); },
-    onError: (error) => { console.error('onError', error); },
+    delegate: {
+      onConnect: () => {
+        console.log('onConnect::client');
+      },
+      onClose: () => {
+        console.log('onClose::client');
+      },
+      onError: (error) => {
+        console.error('onError::client', error);
+      },
+      onMessage: (data) => {
+        console.log('onMessage::client', data);
+      },
+    },
   },
-  frontend: {
-    onConnect: () => { console.log('onConnect::frontend'); },
-    onDisconnect: () => { console.log('onDisconnect::frontend'); },
-    onError: (error) => { console.error('onError::frontend', error); },
-  }
+  devtools: {
+    delegate: {
+      onConnect: () => {
+        console.log('onConnect::devtools');
+      },
+      onClose: () => {
+        console.log('onClose::devtools');
+      },
+      onError: (error) => {
+        console.error('onError::devtools', error);
+      },
+      onMessage: (data) => {
+        console.log('onMessage::devtools', data);
+      },
+    },
+  },
 });
 
-server.listen(3000, () => { console.log('http://localhost:3000/index.html'); });
+server.listen(3000, () => {
+  console.log('http://localhost:3000/index.html');
+});
