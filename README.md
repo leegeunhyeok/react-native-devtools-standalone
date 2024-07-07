@@ -18,7 +18,7 @@ Standalone [react-devtools](https://github.com/facebook/react/tree/main/packages
 ││ WebSocket Server ◄─────┘    │ (WebSocket)         │
 ││        ▲         ││         └─────────────────────┘
 ││        │         ││         ┌─────────────────────────┐
-││        ▼         ││         │ React Devtools Frontend │
+││        ▼         ││         │ React DevTools Frontend │
 ││ WebSocket Server ◄─────┐    │                         │
 │└──────────────────┘│    └────► WebSocket Client        │
 └────────────────────┘         └─────────────────────────┘
