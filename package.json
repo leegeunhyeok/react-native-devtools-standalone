@@ -20,9 +20,9 @@
     }
   },
   "files": [
-    "./esm/*",
-    "./cjs/*",
-    "./dist/*"
+    "esm",
+    "cjs",
+    "dist"
   ],
   "scripts": {
     "build": "node -r @swc-node/register build.ts && tsc -p tsconfig.build.json",
