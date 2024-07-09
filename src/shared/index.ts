@@ -4,13 +4,11 @@ export const DEFAULT_PROXY_WSS_PORT = 8098;
 export const DEFAULT_HOST = 'localhost';
 
 export enum ProxyEventType {
-  OPEN = 'proxy:open',
-  DISCONNECTED = 'proxy:disconnected',
-  MESSAGE = 'proxy:message',
+  OPEN = 'open',
+  CLOSE = 'close',
 }
 
 export interface ProxyEvent {
-  type: ProxyEventType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow
-  payload?: any;
+  event: ProxyEventType;
+  __isProxy: boolean;
 }

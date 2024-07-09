@@ -18,25 +18,25 @@ window.onload = () => {
   setupDevTools({
     element: targetElement,
     delegate: {
-      onConnect: (target) => {
+      onConnect: ({ target }) => {
         console.log('onConnect', target);
 
         if (target === 'client') {
           showLoadingView(false);
         }
       },
-      onClose: (target) => {
+      onClose: ({ target }) => {
         console.log('onClose', target);
 
         if (target === 'client') {
           window.location.reload();
         }
       },
-      onMessage: (data) => {
-        console.log('onMessage', data);
+      onMessage: ({ data }) => {
+        console.log('onMessage', JSON.parse(data));
       },
-      onSend: (data) => {
-        console.log('onSend', data);
+      onSend: ({ data }) => {
+        console.log('onSend', JSON.parse(data));
       },
     },
   });

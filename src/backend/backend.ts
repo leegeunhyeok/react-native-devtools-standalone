@@ -66,7 +66,7 @@ export const setupDevToolsProxy = (
   });
 
   clientWebSocket.bind(devToolsWebSocket);
-  devToolsWebSocket.bind(clientWebSocket, { sendRawData: true });
+  devToolsWebSocket.bind(clientWebSocket);
 
   return async function cleanup(): Promise<void> {
     await clientWebSocket.close();

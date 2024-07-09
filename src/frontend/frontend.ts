@@ -4,6 +4,7 @@ import {
   createBridge,
   createStore,
   initialize as createDevTools,
+  type Config as DevtoolsStoreConfig,
   type DevtoolsProps,
   type Wall,
 } from 'react-devtools-inline/frontend';
@@ -13,8 +14,6 @@ import {
   type ProxyEvent,
 } from '../shared';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- payload
-type Data = any;
 type Target = 'client' | 'proxy-server';
 
 interface DevToolsConfigs {
@@ -35,6 +34,10 @@ interface DevToolsConfigs {
    */
   port?: number;
   /**
+   * React DevTools store config.
+   */
+  devtoolsStoreConfig?: DevtoolsStoreConfig;
+  /**
    * React DevTools props.
    *
    * Defaults to `{ showTabBar: true, hideViewSourceAction: true }`
@@ -47,10 +50,16 @@ interface DevToolsConfigs {
 }
 
 interface ProxyWebSocketDelegate {
-  onConnect?: (target: Target) => void;
-  onClose?: (target: Target) => void;
-  onMessage?: (data: Data) => void;
-  onSend?: (data: { event: string; payload: Data }) => void;
+  onConnect?: (context: { target: Target }) => void;
+  onClose?: (context: { target: Target }) => void;
+  onMessage?: (context: { data: string }) => boolean | void;
+  onSend?: (context: { data: string }) => boolean | void;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow
+function isProxyEvent(message: any): message is ProxyEvent {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- allow
+  return Boolean('__isProxy' in message && message.__isProxy);
 }
 
 const noop = (): void => undefined;
@@ -64,6 +73,7 @@ export const setupDevTools = (config: DevToolsConfigs): void => {
       showTabBar: true,
       hideViewSourceAction: true,
     },
+    devtoolsStoreConfig,
     delegate,
   } = config;
 
@@ -71,29 +81,35 @@ export const setupDevTools = (config: DevToolsConfigs): void => {
   let devToolsEventListener: Wall['listen'] | null = null;
 
   const socket = new WebSocket(`ws://${host}:${port}`);
-  const wall: Wall = {
-    listen(listener) {
-      devToolsEventListener = listener;
-      return noop;
-    },
-    send(event, payload) {
-      if (socket.readyState !== WebSocket.OPEN) return;
-
-      const data = { event, payload };
-      socket.send(JSON.stringify(data));
-      delegate?.onSend?.(data);
-    },
-  };
 
   function setup(): void {
     if (root) {
       return;
     }
 
-    const bridge = createBridge(window, wall);
+    const bridge = createBridge(window, {
+      listen(listener) {
+        devToolsEventListener = listener;
+        return noop;
+      },
+      send(event, payload) {
+        if (socket.readyState !== WebSocket.OPEN) return;
+
+        const data = JSON.stringify({
+          event,
+          ...(payload ? { payload } : null),
+        });
+        const isHandled = delegate?.onSend?.({ data });
+
+        !isHandled && socket.send(data);
+      },
+    });
+
     const store = createStore(bridge, {
+      ...devtoolsStoreConfig,
       supportsNativeInspection: true,
     });
+
     const DevTools = createDevTools(window, { bridge, store });
 
     root = createRoot(element);
@@ -107,34 +123,32 @@ export const setupDevTools = (config: DevToolsConfigs): void => {
   }
 
   socket.addEventListener('open', () => {
+    delegate?.onConnect?.({ target: 'proxy-server' });
     setup();
-    delegate?.onConnect?.('proxy-server');
   });
 
   socket.addEventListener('message', ({ data: rawData }) => {
-    const event = JSON.parse(rawData) as ProxyEvent;
+    const message = JSON.parse(rawData);
 
-    switch (event.type) {
-      case ProxyEventType.OPEN:
-        delegate?.onConnect?.('client');
-        break;
+    if (isProxyEvent(message)) {
+      switch (message.event) {
+        case ProxyEventType.OPEN:
+          delegate?.onConnect?.({ target: 'client' });
+          break;
 
-      case ProxyEventType.DISCONNECTED:
-        delegate?.onClose?.('client');
-        break;
-
-      case ProxyEventType.MESSAGE: {
-        const parsedData = JSON.parse(event.payload);
-        devToolsEventListener?.(parsedData);
-        break;
+        case ProxyEventType.CLOSE:
+          delegate?.onClose?.({ target: 'client' });
+          break;
       }
-    }
+    } else {
+      const isHandled = delegate?.onMessage?.({ data: rawData as string });
 
-    delegate?.onMessage?.(rawData);
+      !isHandled && devToolsEventListener?.(JSON.parse(rawData));
+    }
   });
 
   socket.addEventListener('close', () => {
+    delegate?.onClose?.({ target: 'proxy-server' });
     cleanup();
-    delegate?.onClose?.('proxy-server');
   });
 };

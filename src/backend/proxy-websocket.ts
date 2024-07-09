@@ -7,34 +7,33 @@ interface ProxyWebSocketOptions {
   delegate?: ProxyWebSocketDelegate;
 }
 
-interface BindOptions {
-  /**
-   * Send message without wrap with `ProxyEvent`
-   */
-  sendRawData?: boolean;
-}
-
 export interface ProxyWebSocketDelegate {
-  onConnect?: (socket: ws.WebSocket) => void;
-  onClose?: () => void;
-  onMessage?: (data: string) => void;
+  onConnect?: (
+    context: ProxyWebSocketDelegateContext<{ socket: ws.WebSocket }>,
+  ) => boolean | void;
+  onClose?: (context: ProxyWebSocketDelegateContext) => boolean | void;
+  onMessage?: (
+    context: ProxyWebSocketDelegateContext<{ data: string }>,
+  ) => boolean | void;
   onError?: (error: Error) => void;
 }
 
+type ProxyWebSocketDelegateContext<T = object> = T & {
+  proxyWebSocket: ProxyWebSocket | undefined;
+};
+
 export class ProxyWebSocket {
   private wss: ws.WebSocketServer;
-  private proxyWss?: ProxyWebSocket;
-  private proxyBindOptions?: BindOptions;
+  private proxyWebSocket?: ProxyWebSocket;
   private delegate?: ProxyWebSocketDelegate;
 
   constructor({ host, port, delegate }: ProxyWebSocketOptions) {
     const wss = new ws.WebSocketServer({ host, port });
 
     wss.on('error', (error) => delegate?.onError?.(error));
-    wss.on('close', () => delegate?.onClose?.());
     wss.on('connection', (ws) => {
       this.onConnect(ws);
-      ws.on('close', this.onDisconnect.bind(this));
+      ws.on('close', this.onClose.bind(this));
       ws.on('message', this.onMessage.bind(this));
       ws.on('error', (error) => delegate?.onError?.(error));
     });
@@ -43,23 +42,27 @@ export class ProxyWebSocket {
     this.delegate = delegate;
   }
 
-  private createProxyEvent(
-    type: ProxyEventType,
-    payload?: ProxyEvent['payload'],
-  ): ProxyEvent {
-    return { type, ...(payload ? { payload } : null) };
+  private createProxyEvent(event: ProxyEventType): ProxyEvent {
+    return { event, __isProxy: true };
   }
 
   protected onConnect(socket: ws.WebSocket): void {
     const event = this.createProxyEvent(ProxyEventType.OPEN);
-    this.proxyWss?.sendProxyEvent(event);
-    this.delegate?.onConnect?.(socket);
+    const isHandled = this.delegate?.onConnect?.({
+      socket,
+      proxyWebSocket: this.proxyWebSocket,
+    });
+
+    !isHandled && this.proxyWebSocket?.send(JSON.stringify(event));
   }
 
-  protected onDisconnect(): void {
-    const event = this.createProxyEvent(ProxyEventType.DISCONNECTED);
-    this.proxyWss?.sendProxyEvent(event);
-    this.delegate?.onClose?.();
+  protected onClose(): void {
+    const event = this.createProxyEvent(ProxyEventType.CLOSE);
+    const isHandled = this.delegate?.onClose?.({
+      proxyWebSocket: this.proxyWebSocket,
+    });
+
+    !isHandled && this.proxyWebSocket?.send(JSON.stringify(event));
   }
 
   protected onMessage(data: ws.RawData): void {
@@ -68,22 +71,12 @@ export class ProxyWebSocket {
         ? Buffer.from(data).toString()
         : data.toString();
 
-    if (this.proxyBindOptions?.sendRawData === true) {
-      this.proxyWss?.send(stringifiedData);
-    } else {
-      const event = this.createProxyEvent(
-        ProxyEventType.MESSAGE,
-        stringifiedData,
-      );
+    const isHandled = this.delegate?.onMessage?.({
+      data: stringifiedData,
+      proxyWebSocket: this.proxyWebSocket,
+    });
 
-      this.proxyWss?.sendProxyEvent(event);
-    }
-
-    this.delegate?.onMessage?.(stringifiedData);
-  }
-
-  public sendProxyEvent(event: ProxyEvent): void {
-    this.send(JSON.stringify(event));
+    !isHandled && this.proxyWebSocket?.send(stringifiedData);
   }
 
   public send(data: string): void {
@@ -106,16 +99,15 @@ export class ProxyWebSocket {
     });
   }
 
-  public bind(proxyWebSocket: ProxyWebSocket, bindOptions?: BindOptions): void {
-    if (this.proxyWss) {
+  public bind(proxyWebSocket: ProxyWebSocket): void {
+    if (this.proxyWebSocket) {
       throw new Error('already another proxy websocket server bound');
     }
 
-    this.proxyBindOptions = bindOptions;
-    this.proxyWss = proxyWebSocket;
+    this.proxyWebSocket = proxyWebSocket;
   }
 
   public unbind(): void {
-    this.proxyWss = undefined;
+    this.proxyWebSocket = undefined;
   }
 }

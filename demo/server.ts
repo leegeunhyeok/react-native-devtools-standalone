@@ -17,11 +17,11 @@ setupDevToolsProxy({
       onClose: () => {
         console.log('onClose::client');
       },
+      onMessage: ({ data }) => {
+        console.log('onMessage::client', JSON.parse(data));
+      },
       onError: (error) => {
         console.error('onError::client', error);
-      },
-      onMessage: (data) => {
-        console.log('onMessage::client', data);
       },
     },
   },
@@ -31,13 +31,13 @@ setupDevToolsProxy({
         console.log('onConnect::devtools');
       },
       onClose: () => {
-        console.log('onClose::devtools');
+        console.log('onClose::devtools', event);
+      },
+      onMessage: ({ data }) => {
+        console.log('onMessage::devtools', JSON.parse(data));
       },
       onError: (error) => {
         console.error('onError::devtools', error);
-      },
-      onMessage: (data) => {
-        console.log('onMessage::devtools', data);
       },
     },
   },
