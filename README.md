@@ -6,6 +6,14 @@
 
 Standalone [react-devtools](https://github.com/facebook/react/tree/main/packages/react-devtools) for integration with React Native
 
+<details>
+
+  <summary>You can also embed react-devtools in <a href="https://reactnative.dev/docs/debugging?js-debugger=new-debugger">New Debugger</a>!</summary>
+
+  ![preview](./preview-devtools.png)
+
+</details>
+
 </div>
 
 ## Architecture
@@ -112,6 +120,11 @@ setupDevTools(config);
 ```
 
 ```ts
+import type {
+  Config as DevtoolsStoreConfig,
+  DevtoolsProps,
+} from 'react-devtools-inline/frontend';
+
 interface DevToolsConfigs {
   /**
    * Element to render DevTools.
@@ -129,6 +142,10 @@ interface DevToolsConfigs {
    * Defaults to `8098`
    */
   port?: number;
+  /**
+   * React DevTools store config.
+   */
+  devtoolsStoreConfig?: DevtoolsStoreConfig;
   /**
    * React DevTools props.
    *
