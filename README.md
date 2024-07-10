@@ -10,7 +10,7 @@ Standalone [react-devtools](https://github.com/facebook/react/tree/main/packages
 
   <summary>You can also embed react-devtools in <a href="https://reactnative.dev/docs/debugging?js-debugger=new-debugger">New Debugger</a>!</summary>
 
-  ![preview](./preview-devtools.png)
+![preview](./preview-devtools.png)
 
 </details>
 
@@ -65,8 +65,6 @@ interface DevToolsProxyConfig {
   client?: {
     /**
      * Dev server host.
-     *
-     * Defaults to `'localhost'`
      */
     host?: string;
     /**
@@ -88,8 +86,6 @@ interface DevToolsProxyConfig {
   devtools?: {
     /**
      * Dev server host.
-     *
-     * Defaults to `'localhost'`
      */
     host?: string;
     /**

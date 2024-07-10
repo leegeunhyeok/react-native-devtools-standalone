@@ -8,8 +8,6 @@ interface DevToolsProxyConfig {
   client?: {
     /**
      * Dev server host.
-     *
-     * Defaults to `'localhost'`
      */
     host?: string;
     /**
@@ -54,7 +52,7 @@ export const setupDevToolsProxy = (
   const { client = {}, devtools = {} } = config;
 
   const clientWebSocket = new ProxyWebSocket({
-    host: client.host ?? DEFAULT_HOST,
+    host: client.host,
     port: client.port ?? RN_WSS_PORT,
     delegate: client.delegate,
   });

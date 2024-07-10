@@ -2,7 +2,7 @@ import * as ws from 'ws';
 import { type ProxyEvent, ProxyEventType } from '../shared';
 
 interface ProxyWebSocketOptions {
-  host: string;
+  host?: string;
   port: number;
   delegate?: ProxyWebSocketDelegate;
 }
