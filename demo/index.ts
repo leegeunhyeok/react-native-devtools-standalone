@@ -12,7 +12,7 @@ window.onload = () => {
   assert(loadingElement, 'unable to get element');
 
   const showLoadingView = (show: boolean): void => {
-    loadingElement.style.display = show ? 'block' : 'none';
+    loadingElement.classList[show ? 'remove' : 'add']('hide');
   };
 
   setupDevTools({
@@ -29,7 +29,7 @@ window.onload = () => {
         console.log('onClose', target);
 
         if (target === 'client') {
-          window.location.reload();
+          showLoadingView(true);
         }
       },
       onMessage: ({ data }) => {

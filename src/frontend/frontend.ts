@@ -51,7 +51,7 @@ interface DevToolsConfigs {
 
 interface ProxyWebSocketDelegate {
   onConnect?: (context: { target: Target }) => void;
-  onClose?: (context: { target: Target }) => void;
+  onClose?: (context: { target: Target }) => boolean | void;
   onMessage?: (context: { data: string }) => boolean | void;
   onSend?: (context: { data: string }) => boolean | void;
 }
@@ -122,6 +122,11 @@ export const setupDevTools = (config: DevToolsConfigs): void => {
     devToolsEventListener = null;
   }
 
+  function reload(): void {
+    cleanup();
+    setup();
+  }
+
   socket.addEventListener('open', () => {
     delegate?.onConnect?.({ target: 'proxy-server' });
     setup();
@@ -136,9 +141,11 @@ export const setupDevTools = (config: DevToolsConfigs): void => {
           delegate?.onConnect?.({ target: 'client' });
           break;
 
-        case ProxyEventType.CLOSE:
-          delegate?.onClose?.({ target: 'client' });
+        case ProxyEventType.CLOSE: {
+          const handled = delegate?.onClose?.({ target: 'client' });
+          !handled && reload();
           break;
+        }
       }
     } else {
       const isHandled = delegate?.onMessage?.({ data: rawData as string });

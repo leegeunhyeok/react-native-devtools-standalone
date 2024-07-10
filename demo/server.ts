@@ -31,7 +31,7 @@ setupDevToolsProxy({
         console.log('onConnect::devtools');
       },
       onClose: () => {
-        console.log('onClose::devtools', event);
+        console.log('onClose::devtools');
       },
       onMessage: ({ data }) => {
         console.log('onMessage::devtools', JSON.parse(data));
