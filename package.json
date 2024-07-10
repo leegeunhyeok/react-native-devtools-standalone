@@ -1,6 +1,6 @@
 {
   "name": "react-native-devtools-standalone",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Standalone React DevTools for integration with React Native",
   "repository": "git@github.com:leegeunhyeok/react-native-devtools-standalone.git",
   "license": "MIT",
