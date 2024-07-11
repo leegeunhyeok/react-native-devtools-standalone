@@ -86,6 +86,8 @@ interface DevToolsProxyConfig {
   devtools?: {
     /**
      * Dev server host.
+     *
+     * Defaults to `'localhost'`
      */
     host?: string;
     /**
