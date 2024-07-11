@@ -807,16 +807,16 @@
 
 "@types/react-devtools-inline@^4.24.8":
   version "4.24.8"
-  resolved "https://registry.yarnpkg.com/@types/react-devtools-inline/-/react-devtools-inline-4.24.8.tgz#0aa955d92aea551c9022a21ebb33a4438a9ba7ff"
+  resolved "http://nexus.toss.bz/repository/npm-group/@types/react-devtools-inline/-/react-devtools-inline-4.24.8.tgz#0aa955d92aea551c9022a21ebb33a4438a9ba7ff"
   integrity sha512-hx6l47j2oRvqHKpbtSdvZV185NjJUEDrz7QW02cz2k02cceVoXx+WfAvuFj5x0c8/9Wymw/X7dOeRRqs3gaukA==
   dependencies:
     "@types/react" "*"
     "@types/react-reconciler" "*"
 
-"@types/react-dom@^18.2.19":
-  version "18.2.19"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.19.tgz#b84b7c30c635a6c26c6a6dfbb599b2da9788be58"
-  integrity sha512-aZvQL6uUbIJpjZk4U8JZGbau9KDeAwMfmhyWorxgBkqDIEf6ROjRozcmPIicqsUwPUjbkDfHKgGee1Lq65APcA==
+"@types/react-dom@^18.3.0":
+  version "18.3.0"
+  resolved "http://nexus.toss.bz/repository/npm-group/@types/react-dom/-/react-dom-18.3.0.tgz#0cbc818755d87066ab6ca74fbedb2547d74a82b0"
+  integrity sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==
   dependencies:
     "@types/react" "*"
 
@@ -827,13 +827,21 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^18.2.61":
+"@types/react@*":
   version "18.2.61"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.61.tgz#5607308495037436779939ec0348a5816c08799d"
   integrity sha512-NURTN0qNnJa7O/k4XUkEW2yfygA+NxS0V5h1+kp9jPwhzZy95q3ADoGMP0+JypMhrZBTTgjKAUlTctde1zzeQA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/react@^18.3.3":
+  version "18.3.3"
+  resolved "http://nexus.toss.bz/repository/npm-group/@types/react/-/react-18.3.3.tgz#9679020895318b0915d7a3ab004d92d33375c45f"
+  integrity sha512-hti/R0pS0q1/xx+TsI73XIqk26eBsISZ2R0wUijXIngRK9R/e7Xw/cXVxQK7R5JjW+SV4zGcn5hXjudkN/pLIw==
+  dependencies:
+    "@types/prop-types" "*"
     csstype "^3.0.2"
 
 "@types/scheduler@*":

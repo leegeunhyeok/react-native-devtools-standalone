@@ -7,6 +7,8 @@ import {
   type Config as DevtoolsStoreConfig,
   type DevtoolsProps,
   type Wall,
+  type Bridge,
+  type Store,
 } from 'react-devtools-inline/frontend';
 import {
   DEFAULT_PROXY_WSS_PORT,
@@ -78,6 +80,11 @@ export const setupDevTools = (config: DevToolsConfigs): void => {
   } = config;
 
   let root: Root | null = null;
+  let bridge: Bridge<
+    Record<string, unknown[]>,
+    Record<string, unknown[]>
+  > | null = null;
+  let store: Store | null = null;
   let devToolsEventListener: Wall['listen'] | null = null;
 
   const socket = new WebSocket(`ws://${host}:${port}`);
@@ -87,14 +94,13 @@ export const setupDevTools = (config: DevToolsConfigs): void => {
       return;
     }
 
-    const bridge = createBridge(window, {
+    bridge = createBridge(window, {
       listen(listener) {
         devToolsEventListener = listener;
         return noop;
       },
       send(event, payload) {
         if (socket.readyState !== WebSocket.OPEN) return;
-
         const data = JSON.stringify({
           event,
           ...(payload ? { payload } : null),
@@ -105,9 +111,16 @@ export const setupDevTools = (config: DevToolsConfigs): void => {
       },
     });
 
-    const store = createStore(bridge, {
+    store = createStore(bridge, {
+      checkBridgeProtocolCompatibility: true,
+      supportsTraceUpdates: true,
+      /**
+       * @see https://github.com/facebook/react/blob/6587fe19338d22076b9c0fe50185717218b4a8bc/packages/react-devtools-shared/src/devtools/store.js#L75
+       */
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-ts-expect-error -- wrong type def
+      // @ts-ignore
+      supportsClickToInspect: true,
       ...devtoolsStoreConfig,
-      supportsNativeInspection: true,
     });
 
     const DevTools = createDevTools(window, { bridge, store });
@@ -119,6 +132,9 @@ export const setupDevTools = (config: DevToolsConfigs): void => {
   function cleanup(): void {
     root?.unmount();
     root = null;
+    bridge?.shutdown();
+    bridge = null;
+    store = null;
     devToolsEventListener = null;
   }
 
